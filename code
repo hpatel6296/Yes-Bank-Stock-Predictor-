@@ -10,7 +10,7 @@ from sklearn.ensemble import RandomForestRegressor
 import matplotlib.pyplot as plt
 
 #Load csv fill
-df = pd.read_csv('data_YesBank_StockPrices.csv')
+df = pd.read_csv('https://raw.githubusercontent.com/hpatel6296/Yes-Bank-Stock-Predictor-/refs/heads/main/data_YesBank_StockPrices.csv')
 
 #if any data is null in file this function is take last know valid value and propaget it forword into the next empty cell
 df['Close_Cleaned'] = df['Close'].ffill()

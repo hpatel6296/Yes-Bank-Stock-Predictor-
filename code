@@ -1,0 +1,86 @@
+import numpy as np
+import pandas as pd
+import matplotlib as mp
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error,r2_score
+from sklearn.ensemble import RandomForestRegressor
+import matplotlib.pyplot as plt
+
+#Load csv fill
+df = pd.read_csv('data_YesBank_StockPrices.csv')
+
+#if any data is null in file this function is take last know valid value and propaget it forword into the next empty cell
+df['Close_Cleaned'] = df['Close'].ffill()
+
+#DataFrame X containing only the columns for the opening price, the daily high, and the daily low.
+X = df[['Open', 'High', 'Low']]
+#It creates a Series y containing the closing prices.
+Y = df['Close']
+# X_train : the input feature for training
+# X_test : the input feature used to make prediction
+# y_train : The actual answer for the training set
+# y_test : the actual answer for data set
+X_train, X_test, y_train, y_test = train_test_split(X,Y,test_size=0.2,random_state=42)
+
+#Initialize and train the model
+model = LinearRegression()
+model.fit(X_train,y_train)
+
+#Make prediction
+predictions = model.predict(X_test)
+#print(predictions)
+
+#squeeze all prices between 0 and 1
+scaler = MinMaxScaler()
+
+#scaled the feature X
+X_scaled = scaler.fit_transform(X)
+
+#Split data for training ,testing
+X_train, X_test, y_train, y_test = train_test_split(X_scaled,Y,test_size=0.2,random_state=42)
+
+print(f"Training/Testing set size: {X_train.shape[0]}/{X_test.shape[0]} months")
+#print(f"Testing set size: {X_test.shape[0]} months")
+
+#Initialize the model
+regressor = LinearRegression()
+
+#train the model
+regressor.fit(X_train,y_train)
+
+#Make prediction on the test set
+y_pred = regressor.predict(X_test)
+
+#calculate how wrong the answer
+mse = mean_squared_error(y_test, y_pred)
+
+#calculate accuracy
+r2 = r2_score(y_test,y_pred)
+
+print(f"Mean Squared Error: {mse:.2f}")
+print(f"R-squared Score: {r2:.2f}")
+#For batter visuale understanding ploat graph
+#Set the figure size for better visibility
+plt.figure(figsize=(14, 7))
+
+#Plot Actual vs Predicted
+plt.plot(y_test.values, color='blue', label='Actual Yes Bank Price', linewidth=2)
+plt.plot(y_pred, color='red', linestyle='--', label='Predicted Price', linewidth=2)
+
+#Add Title and Labels
+plt.title('Yes Bank Stock Price Prediction (Testing Set)', fontsize=16)
+plt.xlabel('Time (Months)', fontsize=12)
+plt.ylabel('Stock Price (INR)', fontsize=12)
+
+#Add the Metrics as text on the plot
+stats_text = f'MSE: {86.64:.2f}\nR-squared: {0.99:.4f}'
+plt.annotate(stats_text, xy=(0.05, 0.85), xycoords='axes fraction',
+             bbox=dict(boxstyle="round", fc="white", ec="gray", alpha=0.8))
+
+#Display Legend and Grid
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()

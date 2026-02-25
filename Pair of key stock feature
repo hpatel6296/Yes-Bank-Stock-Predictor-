@@ -1,0 +1,10 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Define the key features for the pair plot
+key_features = ['Open', 'High', 'Low', 'Close', 'Year', 'Month']
+
+# Create the pair plot
+sns.pairplot(df[key_features])
+plt.suptitle('Pair Plot of Key Stock Price Features', y=1.02, fontsize=16) # Add a title to the entire plot
+plt.show()

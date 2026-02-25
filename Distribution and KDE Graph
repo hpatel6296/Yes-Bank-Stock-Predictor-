@@ -1,0 +1,27 @@
+import seaborn as sns
+
+# Define the columns to analyze
+columns_to_analyze = ['Open', 'High', 'Low', 'Close']
+
+# Iterate through each column to create distribution plots
+for col in columns_to_analyze:
+    # Create a figure with two subplots
+    plt.figure(figsize=(16, 6))
+
+    # Subplot 1: Histogram with KDE
+    plt.subplot(1, 2, 1) # 1 row, 2 columns, first plot
+    sns.histplot(df[col], kde=True, bins=30, color='skyblue')
+    plt.title(f'Distribution of {col} Price', fontsize=14)
+    plt.xlabel('Frequency', fontsize=12)
+    plt.legend([f'{col} Price Distribution'], loc='upper right')
+
+    # Subplot 2: Kernel Density Plot
+    plt.subplot(1, 2, 2) # 1 row, 2 columns, second plot
+    sns.kdeplot(df[col], fill=True, color='lightcoral')
+    plt.title(f'KDE of {col} Price', fontsize=14)
+    plt.xlabel(f'{col} Price', fontsize=12)
+    plt.ylabel('Density', fontsize=12)
+    plt.legend([f'{col} Price KDE'], loc='upper right')
+
+    plt.tight_layout()
+    plt.show()
